@@ -30,9 +30,6 @@ class Patients(DataFrameFromJSONMixin):
         married_Never Married
 
         married_Widowed
-
-            a. marital status one hot encode married, not married, divorced, widowedpatient's age and maritial status.
-
         
         '''
         # raise NotImplementedError
