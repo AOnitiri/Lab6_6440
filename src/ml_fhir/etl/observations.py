@@ -18,16 +18,18 @@ class Observations(DataFrameFromJSONMixin):
     def impute_observation(self, obs_df: pd.DataFrame, patient_df: pd.DataFrame, loinc_code: str, col_name: str):
         '''
         Question 2
-        Input: obserations dataframe 
-        Output: a pandas series with the numerical value of glucose
-        Impute missing data for the glucose(impute_glucose) and triglycerides(impute_tri) by using the mean of the column. 
+
+        Impute missing data for the glucose and triglycerides by using the mean of the column. 
         You will be using the observation resources that have these values. 
-        You will be creating a column that that is a numerical value of the observaation. 
+        You will be creating a column that that is a numerical value of the observation. 
         You will need to group the observation records by patient id. 
         When using the aggregation function aggregate by mean. The mean should be rounded to 2 decimal places
 
         The Loinc code for glucose is "2339-0"
         The Loinc code for triglycerides is "2571-8"
+
+        Input: observations dataframe, loinc_code, col_name
+        Output: a pandas dataframe grouped by patient id with mean imputed values for target column
         '''
         
         # raise NotImplementedError
@@ -35,12 +37,15 @@ class Observations(DataFrameFromJSONMixin):
     def mean_normalize(self, df: pd.DataFrame, col_name: str):
         '''
         Question 3 
-        Create a function that will apply mean normailization to a column
-        round the result to 3 decimal places 
+        Create a function that will apply z score mean normalization to a column
+        round the result to 3 decimal places. Hint this uses standard deviation. This function will take a dataframe 
+        and the column name. It will apply normalization to the to the specified column.
 
         Inputs: 
-        df: is a dataframe 
-        col_name:  the column name that mean normalized is applied to 
+        df: is a dataframe
+        col_name:  the column name that z score mean normalized is applied to 
+
+        Output: pandas series data float 3 decimal places
         '''
         # raise NotImplementedError
 

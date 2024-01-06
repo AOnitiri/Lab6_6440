@@ -1,3 +1,4 @@
+from tokenize import String
 import pandas as pd
 from datetime import datetime
 from ._base import DataFrameFromJSONMixin
@@ -7,22 +8,26 @@ class Patients(DataFrameFromJSONMixin):
     def __init__(self, path):
         super().__init__(path)
 
-    def get_age(self, row: pd.Series):
+    def get_age(self, birthdate):
         '''
         Question 1-1
         Create a function that calculates the age based on the birthday. This will be used to apply to each row of the
-        patient dataframe .
+        patient dataframe.
 
         Calculate the age of the patient.
+
+        Input: string birthdate
+        Output: integer calculated age
         '''
         # raise NotImplementedError
     
     def get_marital_status(self, df: pd.DataFrame):
         '''
         Question 1-2
-        One hot encode the marital status. You can use built in pandas function for this.
+        One hot encode the marital status. Take the existing dataframe and add the marital status columns.
+         You can use built in pandas function for this.
 
-        The columns should be the following 
+        The columns added should be the following. It should be an integer 0 or 1.
         married_Divorced
 
         married_Married
@@ -31,9 +36,9 @@ class Patients(DataFrameFromJSONMixin):
 
         married_Widowed
 
-            a. marital status one hot encode married, not married, divorced, widowedpatient's age and maritial status.
 
-        
+        Input: pandas dataframe
+        Output: pandas dataframe 
         '''
         # raise NotImplementedError
 

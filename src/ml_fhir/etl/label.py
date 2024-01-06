@@ -17,11 +17,12 @@ class Label(DataFrameFromJSONMixin):
     def get_stroke_ind(self,obs_df: pd.DataFrame, patient_df: pd.DataFrame):
         '''
         Question 4 
-        Create a binarized column called stroke_ind. This column will have a 1 if the patient had 
-        a stroke and a 0 if they did not have a stroke
+        Create a binarized column called stroke_ind. This column will have a 1.0 if the patient had 
+        a stroke and a 0.0 if they did not have a stroke. Keep in mind that you need to account for all 
+        patients in the patient dataframe not just the observations.
 
-        input: observations dataframe 
-        output: data frame with the patient_id and storke_ind column (float)
+        input: observations dataframe, patient datafame
+        output: data frame with the patient_id and stroke_ind column (float 1 decimal)
         '''
         # raise NotImplementedError
 
