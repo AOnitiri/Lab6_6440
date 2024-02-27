@@ -22,7 +22,7 @@ class Label(DataFrameFromJSONMixin):
         patients in the patient dataframe not just the observations.
 
         input: observations dataframe, patient datafame
-        output: data frame with the patient_id and stroke_ind column (float 1 decimal)
+        output: data frame with the id and stroke_ind column (float 1 decimal)
         '''
         # raise NotImplementedError
 
