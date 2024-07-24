@@ -5,7 +5,7 @@ FROM python:3.10-slim
 
 # Set the working directory in the container
 WORKDIR /app
-RUN pip3 install pandas==2.1.1
+RUN pip3 install pandas==2.2.2
 RUN pip3 install pytest==7.4.2
 VOLUME ./:/app/
 
