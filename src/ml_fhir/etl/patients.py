@@ -26,6 +26,17 @@ class Patients(DataFrameFromJSONMixin):
         age_years: integer the age of the patient in years 
         '''
         # raise NotImplementedError
+        dob_date = datetime.strptime(dob, '%Y-%m-%d')
+        input_date = datetime.strptime(input_date, '%Y-%m-%d')
+        
+        # Calculate the difference in years
+        age_years = input_date.year - dob_date.year
+        
+        # Adjust if the birthday hasn't occurred yet in the given year
+        if (input_date.month, input_date.day) < (dob_date.month, dob_date.day):
+            age_years -= 1
+            
+        return age_years
     
     def get_marital_status(self, df: pd.DataFrame):
         '''
@@ -46,7 +57,24 @@ class Patients(DataFrameFromJSONMixin):
         Input: pandas dataframe
         Output: pandas dataframe 
         '''
-        # raise NotImplementedError
+        
+        df['maritalStatus_display'] = df['maritalStatus'].apply(lambda x: x['coding'][0]['display'] if isinstance(x, dict) and 'coding' in x and isinstance(x['coding'], list) and len(x['coding']) > 0 else None)
+
+        print(df[['id','maritalStatus_display']])
+
+        marital_dummies = pd.get_dummies(df['maritalStatus_display'], prefix='married')
+
+        expected_columns = ['married_Divorced', 'married_Married', 'married_Widowed', 'married_Never Married']
+
+        for col in expected_columns:
+            if col not in marital_dummies.columns:
+                marital_dummies[col] = 0
+
+        marital_dummies = marital_dummies.astype(int)
+
+        result_df = pd.concat([df['id'], marital_dummies[expected_columns]], axis=1)
+
+        return result_df
 
 
     def pipeline(self):
