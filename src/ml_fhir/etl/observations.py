@@ -32,7 +32,32 @@ class Observations(DataFrameFromJSONMixin):
         Output: a pandas dataframe grouped by patient id with mean imputed values for target column
         '''
         
-        # raise NotImplementedError
+        def get_loinc_code(code):
+            try:
+                for c in code['coding']:
+                    if c['system'] == 'http://loinc.org':
+                        return c['code']
+                return None
+            except:
+                return None
+
+        obs_df['loinc_code'] = obs_df['code'].apply(get_loinc_code)
+
+        filtered_df = obs_df[obs_df['loinc_code'] == loinc_code].copy()
+
+        filtered_df['patient_id'] = filtered_df['subject'].apply(lambda x: x['reference'].split('/')[1])
+        filtered_df['value'] = filtered_df['valueQuantity'].apply(lambda x: x['value'])
+        mean = filtered_df.groupby('patient_id')['value'].mean().round(2).reset_index()
+        overall_mean = mean['value'].mean().round(2)
+        all_patients = patient_df[['id']].copy()
+        all_patients = all_patients.rename(columns={'id': 'patient_id'})
+        result_df = pd.merge(all_patients, mean, on='patient_id', how='left')
+        result_df['value'] = result_df['value'].fillna(overall_mean).round(2)
+        result_df.rename(columns={'value': col_name}, inplace=True)
+
+        result_df.rename(columns={'patient_id': 'id'}, inplace=True)
+        result_df = result_df[['id', col_name]] 
+        return result_df
         
     def mean_normalize(self, df: pd.DataFrame, col_name: str):
         '''
@@ -47,7 +72,11 @@ class Observations(DataFrameFromJSONMixin):
 
         Output: pandas series data float 3 decimal places
         '''
-        # raise NotImplementedError
+   
+        
+        normalized_series = ((df[col_name] -  df[col_name].mean()) / df[col_name].std()).round(3)
+        
+        return normalized_series
 
     def pipeline(self):
         observation_df = self.data

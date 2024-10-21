@@ -24,7 +24,29 @@ class Label(DataFrameFromJSONMixin):
         input: observations dataframe, patient datafame
         output: data frame with the id and stroke_ind column (float 1 decimal)
         '''
-        # raise NotImplementedError
+
+        def get_snomed_code(valueCodeableConcept):
+            try:
+                for coding in valueCodeableConcept.get('coding', []):
+                    if coding.get('system') == 'http://snomed.info/sct':
+                        return coding.get('code')
+                return None
+            except (TypeError, AttributeError):
+                return None
+
+        obs_df['snomed_code'] = obs_df['valueCodeableConcept'].apply(get_snomed_code)
+
+        stroke_obs = obs_df[obs_df['snomed_code'] == "230690007"]
+        stroke_patient_ids = stroke_obs['subject'].apply(
+            lambda x: x.get('reference', '').split('/')[1] if isinstance(x, dict) else None
+        ).dropna().unique()
+
+        result_df = patient_df[['id']].copy()
+        result_df['stroke_ind'] = 0.0
+        result_df.loc[result_df['id'].isin(stroke_patient_ids), 'stroke_ind'] = 1.0
+        result_df['stroke_ind'] = result_df['stroke_ind'].astype(float).round(1)
+
+        return result_df[['id', 'stroke_ind']]
 
     def pipeline(self):
         observation_df = self.data
